@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
@@ -24,12 +26,12 @@ const pool = new Pool({
   connectionString,
 });
 
-pool.query('SELECT NOW', (err, res) => {
+pool.query(`CREATE TABLE IF NOT EXISTS items (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), created_at TIMESTAMP DEFAULT NOW())`, (err, res) => {
   if (err) {
     console.error('Database connection error:', err);
     process.exit(1);
   }
-  console.log('Connected to database:', res.rows[0].now);
+  console.log('Database connected & table ready');
 });
 
 app.get('/', async (req, res) => {
